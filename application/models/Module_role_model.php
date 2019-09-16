@@ -37,7 +37,13 @@ class Module_role_model extends CI_Model{
         $this->db->insert(self::TABLE_NAME,$userDat);  
         return $this->db->insert_id();    
     }
-    public function getAllModuleRols(){
+    public function getAllModuleRols($status = null,$created_by = null){
+		if(!empty($status)){
+            $this->db->where("status",$status);
+        }
+		if(!empty($created_by)){
+            $this->db->where("created_by",$created_by);
+        }
         $query = $this->db->get(self::TABLE_NAME);
         return $query->result_array();
     }

@@ -226,8 +226,9 @@ class Admin extends CI_Controller {
 	public function addads(){
 	    $views = array('addads');
 	    $deviceData = $this->devices_model->getAllDeviceData($status='active');
-		$userData = $this->users_model->getAllUsers($user_type=1);
-		$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData);
+		$userData = $this->users_model->getAllUsers($user_type=1);		
+		$servicesData = $this->services_model->getAllServices($status=1,$franchise_id=null);
+		$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData,'servicesData'=>$servicesData);
 		$this->load->view('admin/template/template',$data);
 	}
 	public function saveads(){
@@ -253,6 +254,7 @@ class Admin extends CI_Controller {
 			$add_locations = $this->input->post("add_locations");
 			$devices_id = $this->input->post("devices_id[]");
 			$adCategory = $this->input->post("adCategory");
+			$service_id = $this->input->post("service_id");
 			/*if(!empty($this->input->post("isLiveEnabled"))){
 				$isLiveEnabled = $this->input->post("isLiveEnabled");
 			}else{
@@ -304,25 +306,25 @@ class Admin extends CI_Controller {
 				$isEnableStartEndDate = 'no';
 			}
 			$imageDisplayDuration = $this->input->post("imageDisplayDuration");
-			$trainerarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate);
+			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate,'service_id'=>$service_id);
 						
 			if($_FILES['image-file']["name"] != '')
 			{	
 				$folders = array("Ads_images");				
 				$images = $_FILES['image-file'];							
 				/*$filename = $this->uploaddata->upload_multiple_images($images,$folders);
-				$trainerarray['adFile'] = implode(",",$filename);*/
+				$adarray['adFile'] = implode(",",$filename);*/
 				$filename = $this->uploaddata->uploadImages($images,$folders);
-				$trainerarray['adFile'] = $filename;
+				$adarray['adFile'] = $filename;
 			}
 			if($_FILES['sample_video']["name"] != '')
 			{	
 				$folders_video = array("Ads_videos");				
 				$video = $_FILES['sample_video'];							
 				$filename_video = $this->uploaddata->uploadImages($video,$folders_video,$type=1);
-				$trainerarray['adFile'] = $filename_video;
+				$adarray['adFile'] = $filename_video;
 			}
-			$ad_id = $this->ads_model->save($trainerarray);
+			$ad_id = $this->ads_model->save($adarray);
 			if($ad_id > 0){
 				if(!empty($devices_id)){
 					$finalAdsArray = array();
@@ -364,7 +366,8 @@ class Admin extends CI_Controller {
 	    $deviceData = $this->devices_model->getAllDeviceData($status='active');
 		$userData = $this->users_model->getAllUsers($user_type=1);
 		$selectedDevices = $this->ad_selected_devices_model->getDataByAdId($id);
-		$data = array('views'=>$views,'deviceData'=>$deviceData,'adData'=>$adData,'userData'=>$userData,'selectedDevices'=>$selectedDevices);
+		$servicesData = $this->services_model->getAllServices($status=1,$franchise_id=null);
+		$data = array('views'=>$views,'deviceData'=>$deviceData,'adData'=>$adData,'userData'=>$userData,'selectedDevices'=>$selectedDevices,'servicesData'=>$servicesData);
 		$this->load->view('admin/template/template',$data);
 
 	}
@@ -391,6 +394,7 @@ class Admin extends CI_Controller {
 			$add_locations = $this->input->post("add_locations");
 			$devices_id = $this->input->post("devices_id[]");
 			$adCategory = $this->input->post("adCategory");
+			$service_id = $this->input->post("service_id");
 			$status = $this->input->post("status");
 			$user_id = $this->input->post("user_id");
 			$fname = $this->input->post("fname");
@@ -440,7 +444,7 @@ class Admin extends CI_Controller {
 				$end_date = '0000-00-00 00:00:00';
 				$isEnableStartEndDate = 'no';
 			}
-			$trainerarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'updated_date'=>date("Y-m-d H:i:s"),'status'=>$status,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id);
+			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'updated_date'=>date("Y-m-d H:i:s"),'status'=>$status,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'service_id'=>$service_id);
 						
 			if($_FILES['image-file']["name"] != '')
 			{	
@@ -450,9 +454,9 @@ class Admin extends CI_Controller {
 				$folders = array("Ads_images");				
 				$images = $_FILES['image-file'];							
 				/*$filename = $this->uploaddata->upload_multiple_images($images,$folders);
-				$trainerarray['adFile'] = implode(",",$filename);*/
+				$adarray['adFile'] = implode(",",$filename);*/
 				$filename = $this->uploaddata->uploadImages($images,$folders);
-				$trainerarray['adFile'] = $filename;
+				$adarray['adFile'] = $filename;
 			}
 			if($_FILES['sample_video']["name"] != '')
 			{	
@@ -462,9 +466,9 @@ class Admin extends CI_Controller {
 				$folders_video = array("Ads_videos");				
 				$video = $_FILES['sample_video'];							
 				$filename_video = $this->uploaddata->uploadImages($video,$folders_video,$type=1);
-				$trainerarray['adFile'] = $filename_video;
+				$adarray['adFile'] = $filename_video;
 			}
-			$res = $this->ads_model->update($trainerarray,$id);
+			$res = $this->ads_model->update($adarray,$id);
 			if($res > 0){
 				if(!empty($devices_id)){
 					$finalAdsArray = array();
@@ -846,6 +850,7 @@ class Admin extends CI_Controller {
 			$franchise_id = $this->session->userdata('id');
 		}
 		$serviceData = $this->services_model->getAllServices(1,$franchise_id);
+		$rolesData = $this->module_role_model->getAllModuleRols($status =2,$franchise_id);
 		$id = $this->uri->segment(3);
 		if(!empty($id)){
 			$franchisedata = $this->users_model->getUserDataById($id);
@@ -856,7 +861,7 @@ class Admin extends CI_Controller {
 			$franchisedata = array();
 			$serviceIds = array();
 		}
-		$data = array('views'=>$views,'franchisedata'=>$franchisedata,'serviceData'=>$serviceData,'serviceIds'=>$serviceIds);
+		$data = array('views'=>$views,'franchisedata'=>$franchisedata,'serviceData'=>$serviceData,'serviceIds'=>$serviceIds,'rolesData'=>$rolesData);
 		$this->load->view('admin/template/template',$data);
 	}
 	public function savefranchise(){
@@ -868,6 +873,7 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('username','username','trim|required');
 		$this->form_validation->set_rules('franchisename','franchisename','trim|required');
 		$this->form_validation->set_rules('ipaddress','ipaddress','trim|required');
+		$this->form_validation->set_rules('role_id','role_id','trim|required');
 		if(empty($this->input->post('id'))){
 			$this->form_validation->set_rules('password','password','trim|required');
 		}
@@ -890,6 +896,7 @@ class Admin extends CI_Controller {
 			$franchiselocation = $this->input->post("franchiselocation");
 			$logoimage = $this->input->post("logoimage");
 			$ipaddress = $this->input->post("ipaddress");
+			$role_id = $this->input->post("role_id");
 			$services_id = $this->input->post("services_id[]");
 			$user_type  = 3;
 			if(empty($id)){				
@@ -898,7 +905,7 @@ class Admin extends CI_Controller {
 				$count = $this->users_model->countusers($username,$id);
 			}
 			if($count == 0){
-				$trainerarray = array('fname'=>$fname,'lname'=>$lname,'email'=>$email,'mobile'=>$mobile,'username'=>$username,'password'=>$password,'address'=>$address,'status'=>$status,'city'=>$city,'state'=>$state,'zip'=>$zip,'country'=>$country,'user_type'=>$user_type,'franchisename'=>$franchisename,'franchiselocation'=>$franchiselocation,'ipaddress'=>$ipaddress);
+				$trainerarray = array('fname'=>$fname,'lname'=>$lname,'email'=>$email,'mobile'=>$mobile,'username'=>$username,'password'=>$password,'address'=>$address,'status'=>$status,'city'=>$city,'state'=>$state,'zip'=>$zip,'country'=>$country,'user_type'=>$user_type,'franchisename'=>$franchisename,'franchiselocation'=>$franchiselocation,'ipaddress'=>$ipaddress,'module_role_id'=>$role_id);
 				if(!empty($password)){
 					$trainerarray['password'] = md5($password);
 				}
@@ -985,18 +992,7 @@ class Admin extends CI_Controller {
                 $modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
             }
         }
-        if($this->session->userdata('user_type') == 3){
-        	$createdby = $this->session->userdata('id');            
-            $selectedModulePages = $this->module_role_model->getDataById($this->session->userdata()['user']->module_role_id);
-            $modIDS = explode(",",$selectedModulePages['module_ids']);
-            $modPageIDS = explode(",",$selectedModulePages['page_ids']);
-            
-        }else{
-            $createdby = null;
-            $modIDS = array();
-            $modPageIDS = array();
-        }
-        $data = array('views'=>$views,'modules' => $modules, 'modulePages' => $modulePages, 'modIDS'=>$modIDS, 'modPageIDS'=>$modPageIDS);
+        $data = array('views'=>$views,'modules' => $modules, 'modulePages' => $modulePages);
         $this->load->view('admin/template/template', $data);
     }
 
@@ -1007,14 +1003,8 @@ class Admin extends CI_Controller {
         {
             $role_name = $this->input->post("roll_name");
             $modules_id = $this->input->post("modules_id[]");
-            $modules_page_id = $this->input->post("modules_page_id[]");            
-            if (($this->session->userdata()['user']->role_id == $this->config->item('reseller_role_id')) || ($this->session->userdata()['user']->role_id == $this->config->item('superadmin_role_id'))) {
-                 $created_by = $this->session->userdata()['user']->id;
-            } else {
-                 $created_by = $this->session->userdata()['user']->created_reseller_id;
-            }
+            $modules_page_id = $this->input->post("modules_page_id[]"); 
             $userDat = array("role_name"=>$role_name,
-                            "created_by"=>$created_by,
                             "status"=>2,
                             'created_date'=>date("Y-m-d H:i:s")
                             );
@@ -1046,38 +1036,35 @@ class Admin extends CI_Controller {
                 } 
                 $status = 'success';
                 $this->prepare_flashmessage("Role added successfully..", 0);
-                redirect('modules/addroles');
+                redirect('admin/listroles');
 
             }else{
                 $status = 'error';
                 $this->prepare_flashmessage("Role added in error..", 1);
-                redirect('modules/addroles');
+                redirect('admin/addroles');
             }
 
         }else{
-            $status = 'error';
-            $modules = $this->modules_model->getAllModules();
-            $modulePages = array();
-            if(!empty($modules)){
-                foreach($modules as $value){
-                    $modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
-                }
-            }
-            $data = array('modules' => $modules, 'modulePages' => $modulePages,'status'=>$status);
-            $this->load->view('modules/addroles', $data);
+            $views = array('addroles');
+			$modules = $this->modules_model->getAllModules();
+			$modulePages = array();
+			if(!empty($modules)){
+				foreach($modules as $value){
+					$modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
+				}
+			}
+			$data = array('views'=>$views,'modules' => $modules, 'modulePages' => $modulePages);
+			$this->load->view('admin/template/template', $data);
         }
     }
-    public function listroles(){
-        if($this->session->userdata()['user']->user_type != 2){
-            $createdby = null;          
-        }else{
-            $createdby = $this->session->userdata()['user']->id;
-        }
-        $modulesRolesData = $this->module_role_model->getAllData($status=null,$createdby);
-        $data = array('modulesRolesData' => $modulesRolesData);
-        $this->load->view('modules/listroles', $data);
+    public function listroles(){  
+		$views = array('listroles');
+        $modulesRolesData = $this->module_role_model->getAllData($status=null,$createdby=null);
+        $data = array('views'=>$views,'modulesRolesData' => $modulesRolesData);
+        $this->load->view('admin/template/template', $data);
     }
     public function editroles() {
+		$views = array('editroles');
         $module_id = $this->uri->segment(3);
         if(!empty($module_id)){
             $modules = $this->modules_model->getAllModules();
@@ -1087,21 +1074,11 @@ class Admin extends CI_Controller {
                     $modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
                 }
             }
-            /* if($this->session->userdata()['user']->user_type != 2){
-                $createdby = null;
-                $modIDS = array();
-                $modPageIDS = array();
-            }else{
-                $createdby = $this->session->userdata()['user']->id;            
-                $selectedModulePages = $this->module_role_model->getDataById($this->session->userdata()['user']->module_role_id);
-                $modIDS = explode(",",$selectedModulePages['module_ids']);
-                $modPageIDS = explode(",",$selectedModulePages['page_ids']);
-            } */
             $selectedModulePages = $this->module_role_model->getDataById($module_id);
             $modIDS = explode(",",$selectedModulePages['module_ids']);
             $modPageIDS = explode(",",$selectedModulePages['page_ids']);
-            $data = array('modules' => $modules, 'modulePages' => $modulePages, 'modIDS'=>$modIDS, 'modPageIDS'=>$modPageIDS, 'selectedModulePages'=>$selectedModulePages);
-            $this->load->view('modules/editroles', $data);
+            $data = array('views'=>$views,'modules' => $modules, 'modulePages' => $modulePages, 'modIDS'=>$modIDS, 'modPageIDS'=>$modPageIDS, 'selectedModulePages'=>$selectedModulePages);
+            $this->load->view('admin/template/template', $data);
         }else{
             redirect('modules/listroles');          
         }
@@ -1147,39 +1124,34 @@ class Admin extends CI_Controller {
                     $this->role_selected_module_pages_model->saveSelectedModulePageData($pagearray,$module_id);
                 } 
                 $status = 'success';
-                $this->prepare_flashmessage("Role added successfully..", 0);
-                redirect('modules/listroles');
+                $this->prepare_flashmessage("Role updated successfully..", 0);
+                redirect('admin/listroles');
 
             }else{
                 $status = 'error';
-                $this->prepare_flashmessage("Role added in error..", 1);
-                redirect('modules/listroles');
+                $this->prepare_flashmessage("Role updated in error..", 1);
+                redirect('admin/editroles/'.$module_id);
             }
 
         }else{
-            $module_id = $this->input->post('module_id');
-            $modules = $this->modules_model->getAllModules();
-            $modulePages = array();
-            if(!empty($modules)){
-                foreach($modules as $value){
-                    $modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
-                }
-            }
-            /* if($this->session->userdata()['user']->user_type != 2){
-                $createdby = null;
-                $modIDS = array();
-                $modPageIDS = array();
-            }else{
-                $createdby = $this->session->userdata()['user']->id;            
-                $selectedModulePages = $this->module_role_model->getDataById($this->session->userdata()['user']->module_role_id);
-                $modIDS = explode(",",$selectedModulePages['module_ids']);
-                $modPageIDS = explode(",",$selectedModulePages['page_ids']);
-            } */
-            $selectedModulePages = $this->module_role_model->getDataById($module_id);
-            $modIDS = explode(",",$selectedModulePages['module_ids']);
-            $modPageIDS = explode(",",$selectedModulePages['page_ids']);
-            $data = array('modules' => $modules, 'modulePages' => $modulePages, 'modIDS'=>$modIDS, 'modPageIDS'=>$modPageIDS, 'selectedModulePages'=>$selectedModulePages);
-            $this->load->view('modules/editroles', $data);
+            $views = array('editroles');
+			$module_id = $this->input->post('module_id');
+			if(!empty($module_id)){
+				$modules = $this->modules_model->getAllModules();
+				$modulePages = array();
+				if(!empty($modules)){
+					foreach($modules as $value){
+						$modulePages[$value['id']] = $this->module_pages_model->getDataByModuleID($value['id']);
+					}
+				}
+				$selectedModulePages = $this->module_role_model->getDataById($module_id);
+				$modIDS = explode(",",$selectedModulePages['module_ids']);
+				$modPageIDS = explode(",",$selectedModulePages['page_ids']);
+				$data = array('views'=>$views,'modules' => $modules, 'modulePages' => $modulePages, 'modIDS'=>$modIDS, 'modPageIDS'=>$modPageIDS, 'selectedModulePages'=>$selectedModulePages);
+				$this->load->view('admin/template/template', $data);
+			}else{
+				redirect('modules/listroles');          
+			}
         }
     }
 }

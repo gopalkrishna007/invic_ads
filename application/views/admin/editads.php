@@ -90,6 +90,20 @@
     <div class="clearfix"></div>    
 </div>
 <div class="form-group">
+	<div class="col-md-3">
+		<label class="form-label">Ad's Service</label>
+	</div>
+	<div class="col-md-4">
+		<select id="service_id" style="width:100%" name="service_id">
+			<option value="">SELECT SERVICE NAME</option>
+			<?php foreach($servicesData as $srvData){ ?>
+			<option value="<?= $srvData['id'] ?>" <?= ($srvData['id'] == $adData['service_id'] ?'SELECTED':'') ?>><?= ucwords($srvData['servicename']) ?></option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="form-group">
      <div class="col-md-3">
         <label class="form-label">Type of Ad</label>
     </div>
@@ -302,7 +316,7 @@
     </div>
     <div class="col-md-4">
         <select id="status" style="width:100%" name="status" >
-            <option value="">SELECT AD CATEGORY</option>
+            <option value="">SELECT AD STATUS</option>
             <option value="2" <?= ($adData['status']==2?'SELECTED':'') ?>>Active</option>
             <option value="3" <?= ($adData['status']==3?'SELECTED':'') ?>>In-active</option>
         </select>

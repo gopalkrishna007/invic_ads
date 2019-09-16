@@ -89,6 +89,20 @@
     <div class="clearfix"></div>    
 </div>
 <div class="form-group">
+	<div class="col-md-3">
+		<label class="form-label">Ad's Service</label>
+	</div>
+	<div class="col-md-4">
+		<select id="service_id" style="width:100%" name="service_id">
+			<option value="">SELECT SERVICE NAME</option>
+			<?php foreach($servicesData as $srvData){ ?>
+			<option value="<?= $srvData['id'] ?>"><?= ucwords($srvData['servicename']) ?></option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="form-group">
      <div class="col-md-3">
         <label class="form-label">Type of Ad</label>
     </div>

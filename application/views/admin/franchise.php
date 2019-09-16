@@ -112,6 +112,20 @@
                                         </div>
                                         <div class="clearfix"></div>    
                                     </div>
+									<div class="form-group">
+                                        <div class="col-md-3">
+                                            <label class="form-label">Role</label>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <select class="form-control" name="role_id" required> 
+												<option value="">SELECT ROLE</option>
+                                                <?php foreach($rolesData as $rdata){ ?>
+                                                <option value="<?= $rdata['id'] ?>" <?= @($franchisedata['module_role_id'] == $rdata['id'] ? 'SELECTED' : '') ?>><?= $rdata['role_name'] ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="clearfix"></div>    
+                                    </div>
                                     <div class="form-group">
                                         <div class="col-md-3">
                                             <label class="form-label">First Name</label>
@@ -241,8 +255,8 @@
                                         <div class="col-md-4">
                                              <select id="status" style="width:100%" name="status" required>
                                                 <option value="">Select Status</option>
-                                                <option value="2" <?= @($franchisedata['status'] == 1 ? 'SELECTED' : '') ?>>Active</option>
-                                                <option value="3" <?= @($franchisedata['status'] == 2 ? 'SELECTED' : '') ?>>In-Actice</option>
+                                                <option value="2" <?= @($franchisedata['status'] == 2 ? 'SELECTED' : '') ?>>Active</option>
+                                                <option value="3" <?= @($franchisedata['status'] == 3 ? 'SELECTED' : '') ?>>In-Actice</option>
                                             </select>
                                         </div>
 

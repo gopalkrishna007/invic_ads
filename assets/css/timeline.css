@@ -1,0 +1,137 @@
+
+.main-timeline-section{
+  position: relative; 
+  width: 100%;  
+  margin:auto; 
+  height:300px;
+}
+.main-timeline-section .timeline-start,
+.main-timeline-section .timeline-end{
+  position: absolute;
+  background:#148ebd;
+  border-radius:100px;
+  top:50%;
+  transform: translateY(-50%);
+  width:30px;
+  height:30px;
+}
+.main-timeline-section .timeline-end{
+  right:0px;
+}
+.main-timeline-section .conference-center-line{
+  position: absolute;
+  width:100%;
+  height:5px;
+  top:50%;
+  transform: translateY(-50%);
+  background:#148ebd;
+}
+.timeline-article{
+    width:17%;
+    position: relative;
+    min-height: 300px;
+    float:right;
+}
+.timeline-article .content-date{
+    position: absolute;
+    top: 35%;
+    /* left: -30px;  */
+    font-size:18px;
+	color:#fff;
+}
+.timeline-article .meta-date{
+    position: absolute;
+    top: 50%;
+    left: 0px;
+    transform: translateY(-50%); 
+    width:20px;
+    height:20px;
+    border-radius: 100%;
+    background:#fff;
+    border:1px solid #148ebd;
+}
+.timeline-article .content-box{
+   /* box-shadow: 2px 2px 4px 0px #808080;
+  border:1px solid #148ebd;
+  border-radius: 5px;
+  background-color: #fff;
+ width: 180px; 
+  width: 75px;*/
+  position: absolute;
+/*   top: 60%; */
+/*   left: -80px;  */
+    top: 57%;
+left: -28px;
+  padding:10px;
+}
+.timeline-article-top .content-box:before{
+  content: " ";
+  position:absolute; 
+  /* left:50%; */
+  left:17%;
+  transform: translateX(-50%);
+  top:-20px;
+  border:10px solid transparent;
+  border-bottom-color: #148ebd;
+}
+.timeline-article-bottom .content-date{
+  top: 59%;
+}
+.timeline-article-bottom .content-box{
+/*   top: 0%; */
+top: 19%;
+left: -28px;
+}
+.timeline-article-bottom .content-box:before{
+  content: " ";
+  position:absolute; 
+  left:50%;
+  transform: translateX(-50%);
+  bottom:-20px;
+  border:10px solid transparent;
+  border-top-color:#148ebd;
+}
+
+/*----------------------------------how to arder code here--------------------*/
+.timeline-box{
+	/*background: rgb(0,174,239);
+	padding:20px;*/
+	margin-bottom:15px;
+}
+.testimonial-txt{
+	color:#fff;
+	text-align:center;
+	margin-bottom:3%;
+}
+.timeline-immg{
+	width:50px;
+	height:50px;
+}
+.wallet-txt {
+    position: absolute;
+    left: -14px;
+}
+.order-txt {
+    position: relative;
+    left: -37px;
+}
+.attach-txt {
+    position: relative;
+    left: -57px;
+}
+.addcart-txt {
+    position: relative;
+    left: -25px;
+}
+.search-txt {
+    position: relative;
+    left: -15px;
+}
+.inner-txt-order{
+	position: relative;
+    left: -49px;
+    font-size: 13px;
+    /*text-align: justify;*/
+    color: #fff;
+	top:7px;
+}

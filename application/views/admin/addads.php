@@ -88,7 +88,7 @@
     </div>
     <div class="clearfix"></div>    
 </div>
-<div class="form-group">
+<!--<div class="form-group">
 	<div class="col-md-3">
 		<label class="form-label">Ad's Service</label>
 	</div>
@@ -101,7 +101,8 @@
 		</select>
 	</div>
 	<div class="clearfix"></div>
-</div>
+</div>-->
+<div id="serviceDiv"></div>
 <div class="form-group">
      <div class="col-md-3">
         <label class="form-label">Type of Ad</label>
@@ -340,6 +341,39 @@
 </div>
 <script>
 $('.testSelAll1').SumoSelect({selectAll:true });
+var deviceObj = [];
+var serviceDiv = '';
+$(document).on("change",".testSelAll1",function(){
+	deviceObj = [];
+	serviceDiv = '';
+	$("#serviceDiv").html('');
+	$('option:selected').each(function () {
+		if($(this).val() != ''){
+			
+			deviceObj.push({"id":$(this).val(),"deviceName":$(this).text()});
+		}
+    });
+	console.log(deviceObj);
+	if(deviceObj.length > 0){
+		$(deviceObj).each(function (index, value ) {
+			serviceDiv	+= '<div class="form-group">'+
+								'<div class="col-md-3">'+
+									'<label class="form-label">'+value.deviceName+'</label>'+
+								'</div>'+
+								'<div class="col-md-4">'+
+									'<select id="service_id'+value.id+'" style="width:100%" name="service_id['+value.id+']">'+
+										'<option value="">SELECT SERVICE NAME</option>'+
+										<?php foreach($servicesData as $srvData){ ?>
+										'<option value="<?= $srvData['id'] ?>"><?= ucwords($srvData['servicename']) ?></option>'+
+										<?php } ?>
+									'</select>'+
+								'</div>'+
+								'<div class="clearfix"></div>'+
+							'</div>';
+		});
+		$("#serviceDiv").html(serviceDiv);
+	}
+});
 $(document).on("click",".adType",function(){
     var adType = $(this).val();
     if(adType == 'image'){

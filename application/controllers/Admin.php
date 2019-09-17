@@ -232,6 +232,7 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/template/template',$data);
 	}
 	public function saveads(){
+		echo "<pre>";print_r($_POST);exit;
 		$this->form_validation->set_rules('adTitle','title','trim|required');
 		$this->form_validation->set_rules('adType','adType','trim|required');
 		//$this->form_validation->set_rules('adDuration','adDuration','trim|required');
@@ -254,7 +255,7 @@ class Admin extends CI_Controller {
 			$add_locations = $this->input->post("add_locations");
 			$devices_id = $this->input->post("devices_id[]");
 			$adCategory = $this->input->post("adCategory");
-			$service_id = $this->input->post("service_id");
+			$service_id = $this->input->post("service_id[]");
 			/*if(!empty($this->input->post("isLiveEnabled"))){
 				$isLiveEnabled = $this->input->post("isLiveEnabled");
 			}else{
@@ -306,7 +307,7 @@ class Admin extends CI_Controller {
 				$isEnableStartEndDate = 'no';
 			}
 			$imageDisplayDuration = $this->input->post("imageDisplayDuration");
-			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate,'service_id'=>$service_id);
+			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate);
 						
 			if($_FILES['image-file']["name"] != '')
 			{	
@@ -329,9 +330,13 @@ class Admin extends CI_Controller {
 				if(!empty($devices_id)){
 					$finalAdsArray = array();
 					foreach($devices_id as $did){
+						$serviceData = $this->services_model->getServiceDataById($service_id[$did]);
+						$expiryDate = $this->getExpiryDate($serviceData);
 						$deviceArray = array();
 						$deviceArray['ad_id'] = $ad_id;
 						$deviceArray['devices_id'] = $did;
+						$deviceArray['service_id'] = $service_id[$did];
+						$deviceArray['expiry_date'] = $expiryDate;
 						$deviceArray['status'] = 2;
 						array_push($finalAdsArray,$deviceArray);
 					}
@@ -352,6 +357,19 @@ class Admin extends CI_Controller {
 			$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData);
 			$this->load->view('admin/template/template',$data);
 		}
+	}
+	public function getExpiryDate($serviceData){
+		$days = 0;
+		if(!empty($serviceData)){			
+			if($serviceData['unittype'] == 2){
+				$days = $serviceData['unit']*30;
+			}else if($serviceData['unittype'] == 1){
+				$days = $serviceData['unit']
+			}else{
+				$days = $days;
+			}			
+		}
+		return date('Y-m-d H:i:s', strtotime("+$days days"));
 	}
 	public function viewads(){
 		$views = array('viewads');

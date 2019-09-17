@@ -228,11 +228,11 @@ class Admin extends CI_Controller {
 	    $deviceData = $this->devices_model->getAllDeviceData($status='active');
 		$userData = $this->users_model->getAllUsers($user_type=1);		
 		$servicesData = $this->services_model->getAllServices($status=1,$franchise_id=null);
-		$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData,'servicesData'=>$servicesData);
+		$franchiseData = $this->users_model->getAllUsers($user_type=3);
+		$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData,'servicesData'=>$servicesData,'franchiseData'=>$franchiseData);
 		$this->load->view('admin/template/template',$data);
 	}
 	public function saveads(){
-		echo "<pre>";print_r($_POST);exit;
 		$this->form_validation->set_rules('adTitle','title','trim|required');
 		$this->form_validation->set_rules('adType','adType','trim|required');
 		//$this->form_validation->set_rules('adDuration','adDuration','trim|required');
@@ -256,6 +256,7 @@ class Admin extends CI_Controller {
 			$devices_id = $this->input->post("devices_id[]");
 			$adCategory = $this->input->post("adCategory");
 			$service_id = $this->input->post("service_id[]");
+			$franchise_id = $this->input->post("franchise_id");
 			/*if(!empty($this->input->post("isLiveEnabled"))){
 				$isLiveEnabled = $this->input->post("isLiveEnabled");
 			}else{
@@ -307,7 +308,7 @@ class Admin extends CI_Controller {
 				$isEnableStartEndDate = 'no';
 			}
 			$imageDisplayDuration = $this->input->post("imageDisplayDuration");
-			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate);
+			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate,'franchise_id'=>$franchise_id);
 						
 			if($_FILES['image-file']["name"] != '')
 			{	

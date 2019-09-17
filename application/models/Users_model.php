@@ -61,9 +61,12 @@ class Users_model extends CI_Model {
 		$query =  $this->db->get_where(self::TABLE_NAME,$condition_array);
 		return $query->row_array();
 	}
-	public function getAllUsers($user_type=null){
+	public function getAllUsers($user_type=null,$status=null){
 		if(!empty($user_type)){
 			$this->db->where('user_type',$user_type);
+		}
+		if(!empty($status)){
+			$this->db->where('status',$status);
 		}
 		$query = $this->db->get(self::TABLE_NAME);
 		return $query->result_array();

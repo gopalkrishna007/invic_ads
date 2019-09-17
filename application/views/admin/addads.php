@@ -70,6 +70,20 @@
     <div class="clearfix"></div>
 </div>
 <div class="form-group">
+	<div class="col-md-3">
+		<label class="form-label">Franchise</label>
+	</div>
+	<div class="col-md-4">
+		<select id="service_id" style="width:100%" name="franchise_id" required>
+			<option value="">SELECT FRANCHISE</option>
+			<?php foreach($franchiseData as $frData){ ?>
+			<option value="<?= $frData['id'] ?>"><?= ucwords($frData['franchisename']) ?></option>
+			<?php } ?>
+		</select>
+	</div>
+	<div class="clearfix"></div>
+</div>
+<div class="form-group">
     <div class="col-md-3">
         <label class="form-label">Device Name</label>
     </div>

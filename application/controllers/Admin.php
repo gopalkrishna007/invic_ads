@@ -223,13 +223,31 @@ class Admin extends CI_Controller {
 		}
 		 echo json_encode($result);
 	}
-	public function addads(){
+	/*public function addads(){
 	    $views = array('addads');
 	    $deviceData = $this->devices_model->getAllDeviceData($status='active');
 		$userData = $this->users_model->getAllUsers($user_type=1);		
 		$servicesData = $this->services_model->getAllServices($status=1,$franchise_id=null);
 		$franchiseData = $this->users_model->getAllUsers($user_type=3);
 		$data = array('views'=>$views,'deviceData'=>$deviceData,'userData'=>$userData,'servicesData'=>$servicesData,'franchiseData'=>$franchiseData);
+		$this->load->view('admin/template/template',$data);
+	}*/
+	public function getDataByFranchiseId(){
+		$this->form_validation->set_rules('franchise_id','franchise_id','trim|required');
+		if($this->form_validation->run())
+		{
+			$franchise_id = $this->input->post('franchise_id');
+			
+		}else{
+			$result['success'] = 2;
+			$result['message'] = validation_errors();
+		}
+		echo json_encode($result);
+	}
+	public function addads(){
+	    $views = array('addads');	    
+		$franchiseData = $this->users_model->getAllUsers($user_type=3);
+		$data = array('views'=>$views,'franchiseData'=>$franchiseData);
 		$this->load->view('admin/template/template',$data);
 	}
 	public function saveads(){
@@ -365,7 +383,7 @@ class Admin extends CI_Controller {
 			if($serviceData['unittype'] == 2){
 				$days = $serviceData['unit']*30;
 			}else if($serviceData['unittype'] == 1){
-				$days = $serviceData['unit']
+				$days = $serviceData['unit'];
 			}else{
 				$days = $days;
 			}			

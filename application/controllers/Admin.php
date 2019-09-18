@@ -237,7 +237,16 @@ class Admin extends CI_Controller {
 		if($this->form_validation->run())
 		{
 			$franchise_id = $this->input->post('franchise_id');
-			
+			$devices = $this->devices_model->getAllDeviceData($status='active',$franchise_id);
+			$services = $this->franchise_selected_services_model->getServicesByFranchiseId($franchise_id);
+			if(!empty($devices) && !empty($services)){
+				$result['success'] = 1;
+				$result['devices'] = $devices;
+				$result['services'] = $services;
+			}else{
+				$result['success'] = 2;
+				$result['message'] = 'No data found';
+			}
 		}else{
 			$result['success'] = 2;
 			$result['message'] = validation_errors();
@@ -630,26 +639,30 @@ class Admin extends CI_Controller {
 	    $views = array('adddevice');
 		$device = array();
 	    $deviceData = $this->devices_model->getAllData();
+		$franchiseData = $this->users_model->getAllUsers($user_type=3);
 		$id = $this->uri->segment(3);
 		if(!empty($id)){
 			$device = $this->devices_model->getDataById($id);
 		}
-		$data = array('views'=>$views,'deviceData'=>$deviceData,'device'=>$device);
+		$data = array('views'=>$views,'deviceData'=>$deviceData,'device'=>$device,'franchiseData'=>$franchiseData);
 		$this->load->view('admin/template/template',$data);
 	}
 	public function savedevice(){
 		$this->form_validation->set_rules('devices_id', 'devices_id', 'trim|required');
 		$this->form_validation->set_rules('device_name', 'device_name', 'trim|required');
+		$this->form_validation->set_rules('franchise_id', 'franchise_id', 'trim|required');
 		if ($this->form_validation->run())
 		{
 			$devices_id = $this->input->post("devices_id");
 			$device_name = $this->input->post("device_name");
 			$device_location = $this->input->post("device_location");
+			$franchise_id = $this->input->post("franchise_id");
 			$status = $this->input->post("status");
 			$deviceArray = array(
 				'device_name'=>$device_name,
 				'device_location'=>$device_location,				
-				'updated_date'=>date("Y-m-d H:i:s")
+				'updated_date'=>date("Y-m-d H:i:s"),
+				'franchise_id'=>$franchise_id
 				);
 			if(!empty($this->input->post('id'))){
 				$deviceArray['status']=$status;

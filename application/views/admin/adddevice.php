@@ -51,7 +51,21 @@
                     <div class="grid-body no-border"> <br>
                         <div class="row">
                             <div class="col-md-12 col-sm-12 col-xs-12">
-							<form action="<?= base_url("admin/savedevice") ?>" class="login-form validate" id="login-form" method="post" name="login-form" enctype="multipart/form-data"> 
+							<form action="<?= base_url("admin/savedevice") ?>" class="login-form validate" id="login-form" method="post" name="login-form" enctype="multipart/form-data">
+								<div class="form-group">
+									<div class="col-md-3">
+										<label class="form-label">Franchise</label>
+									</div>
+									<div class="col-md-4">
+										<select id="franchise_id" style="width:100%" name="franchise_id" required>
+											<option value="">SELECT FRANCHISE</option>
+											<?php foreach($franchiseData as $frData){ ?>
+											<option value="<?= $frData['id'] ?>" <?= @($device['franchise_id'] == $frData['id'] ? 'SELECTED' : '') ?>><?= ucwords($frData['franchisename']) ?></option>
+											<?php } ?>
+										</select>
+									</div>
+									<div class="clearfix"></div>
+								</div>
                                 <div class="form-group">
 									<div class="col-md-3">
 										<label class="form-label">Device Id's</label>

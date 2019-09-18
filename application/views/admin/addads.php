@@ -94,7 +94,7 @@
             <option value="<?= $ddata['id'] ?>"><?= $ddata['device_name'] ?></option>
             <?php } ?>
         </select>-->
-		<select class="form-control testSelAll1" name="devices_id[]" placeholder="SELECT DEVICE NAME" multiple="multiple" required>	
+		<select class="form-control testSelAll1 device" name="devices_id[]" placeholder="SELECT DEVICE NAME" multiple="multiple" required>	
 		</select>
     </div>
     <div class="clearfix"></div>    
@@ -352,7 +352,14 @@
 </div>
 <script>
 $('.testSelAll1').SumoSelect({selectAll:true });
+var deviceSection = '';
+var deviceObj = [];
+var serviceDiv = '';
+var serviceObj = '';
 $(document).on("change","#franchise_id",function(){
+	$(".device").html("");
+	serviceObj = '';
+	deviceSection = '';
     var franchise_id = $(this).val();
     if(franchise_id != ''){
         $.ajax({
@@ -364,19 +371,28 @@ $(document).on("change","#franchise_id",function(){
             dataType: "json",
             success: function(data) {
                 if (data.success == 1) {
-                } else {
+					serviceObj = data.services;
+					if(data.devices.length > 0){
+						$(data.devices).each(function (index, value ) {
+							deviceSection += '<option val="'+value.id+'">'+value.device_name+'</option>';
+						});
+						$(".device").html(deviceSection);
+					}
+                }else {
+					serviceObj = '';
+					deviceSection = '';
+					$(".device").html("");
                 }
+				$('.testSelAll1')[0].sumo.reload();
             }
         });
     }
 });
-var deviceObj = [];
-var serviceDiv = '';
-$(document).on("change",".testSelAll1",function(){
+$(document).on("change",".device",function(){
 	deviceObj = [];
 	serviceDiv = '';
 	$("#serviceDiv").html('');
-	$('.testSelAll1 option:selected').each(function () {
+	$('.device option:selected').each(function () {
 		if($(this).val() != ''){
 			
 			deviceObj.push({"id":$(this).val(),"deviceName":$(this).text()});
@@ -392,6 +408,9 @@ $(document).on("change",".testSelAll1",function(){
 								'<div class="col-md-4">'+
 									'<select id="service_id'+value.id+'" style="width:100%" name="service_id['+value.id+']">'+
 										'<option value="">SELECT SERVICE NAME</option>'+
+										$(serviceObj).each(function (index , value1){
+										'<option val="'+value.service_id+'">'+value1.servicename+'</option>'
+										}
 									'</select>'+
 								'</div>'+
 								'<div class="clearfix"></div>'+

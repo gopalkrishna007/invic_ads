@@ -64,7 +64,7 @@
                   <table class="table no-more-tables">
                      <thead>
                         <tr>
-                           <th>Sno</th>
+                           <th>Id</th>
                            <th>Franchise Name</th>
                            <th>Location</th>
                            <th>IP Address</th>
@@ -81,7 +81,7 @@
                      <tbody>
                         <?php if(!empty($userData)){ $sno=1; foreach($userData as $dat){ ?>                 
                         <tr id="remove<?= $dat['id'] ?>">
-                           <td><?= $sno ?></td>
+                           <td><?= $dat['id'] ?></td>
                            <td><?= $dat['franchisename'] ?></td>
                            <td><?= $dat['franchiselocation'] ?></td>
                            <td><?= $dat['ipaddress'] ?></td>

@@ -87,32 +87,12 @@
     <div class="col-md-3">
         <label class="form-label">Device Name</label>
     </div>
-    <div class="col-md-4">
-        <!--<select id="adDevice" style="width:100%" name="devices_id" required>
-            <option value="">SELECT DEVICE NAME</option>
-            <?php foreach($deviceData as $ddata){ ?>
-            <option value="<?= $ddata['id'] ?>"><?= $ddata['device_name'] ?></option>
-            <?php } ?>
-        </select>-->
+    <div class="col-md-4">        
 		<select class="form-control testSelAll1 device" name="devices_id[]" placeholder="SELECT DEVICE NAME" multiple="multiple" required>	
 		</select>
     </div>
     <div class="clearfix"></div>    
 </div>
-<!--<div class="form-group">
-	<div class="col-md-3">
-		<label class="form-label">Ad's Service</label>
-	</div>
-	<div class="col-md-4">
-		<select id="service_id" style="width:100%" name="service_id">
-			<option value="">SELECT SERVICE NAME</option>
-			<?php foreach($servicesData as $srvData){ ?>
-			<option value="<?= $srvData['id'] ?>"><?= ucwords($srvData['servicename']) ?></option>
-			<?php } ?>
-		</select>
-	</div>
-	<div class="clearfix"></div>
-</div>-->
 <div id="serviceDiv"></div>
 <div class="form-group">
      <div class="col-md-3">
@@ -374,7 +354,7 @@ $(document).on("change","#franchise_id",function(){
 					serviceObj = data.services;
 					if(data.devices.length > 0){
 						$(data.devices).each(function (index, value ) {
-							deviceSection += '<option val="'+value.id+'">'+value.device_name+'</option>';
+							deviceSection += '<option value="'+value.id+'">'+value.device_name+'</option>';
 						});
 						$(".device").html(deviceSection);
 					}
@@ -386,6 +366,12 @@ $(document).on("change","#franchise_id",function(){
 				$('.testSelAll1')[0].sumo.reload();
             }
         });
+    }else{
+        serviceObj = '';
+        deviceSection = '';
+        $(".device").html("");
+        $('.testSelAll1')[0].sumo.reload();
+        $("#serviceDiv").html("");
     }
 });
 $(document).on("change",".device",function(){
@@ -398,19 +384,21 @@ $(document).on("change",".device",function(){
 			deviceObj.push({"id":$(this).val(),"deviceName":$(this).text()});
 		}
     });
-	console.log(deviceObj);
+	//console.log(deviceObj);
 	if(deviceObj.length > 0){
 		$(deviceObj).each(function (index, value ) {
+            var srvData = '';
+            $(serviceObj).each(function (index , value1){
+                srvData += '<option value="'+value1.service_id+'">'+value1.servicename+'</option>';
+            });
 			serviceDiv	+= '<div class="form-group">'+
 								'<div class="col-md-3">'+
 									'<label class="form-label">'+value.deviceName+'</label>'+
 								'</div>'+
 								'<div class="col-md-4">'+
 									'<select id="service_id'+value.id+'" style="width:100%" name="service_id['+value.id+']">'+
-										'<option value="">SELECT SERVICE NAME</option>'+
-										$(serviceObj).each(function (index , value1){
-										'<option val="'+value.service_id+'">'+value1.servicename+'</option>'
-										}
+										'<option value="">SELECT SERVICE NAME</option>'+srvData+
+										
 									'</select>'+
 								'</div>'+
 								'<div class="clearfix"></div>'+

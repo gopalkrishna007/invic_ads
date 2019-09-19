@@ -40,8 +40,11 @@ class Devices_model extends CI_Model {
 		$this->db->where('id',$device_id);
 		return $this->db->delete(self::TABLE_NAME);
 	}
-	public function getDataByDevice($device_id){
+	public function getDataByDevice($device_id,$franchise_id=null){
 		$this->db->where('device_id',$device_id);
+		if(!empty($franchise_id)){
+			$this->db->where('franchise_id',$franchise_id);
+		}
 		$query = $this->db->get(self::TABLE_NAME);
 		return $query->row_array();
 	}

@@ -9,13 +9,16 @@ class Ads_model extends CI_Model {
 		$this->load->database();
 		
 	}	
-	public function getAllAdsData($status=null,$device_id=null,$user_id=null){
+	public function getAllAdsData($status=null,$device_id=null,$user_id=null,$franchise_id=null){
 		$this->db->select("ads.*,devices.device_id,devices.device_name");
 		$this->db->from(self::TABLE_NAME);
 		$this->db->join("ad_selected_devices","ad_selected_devices.ad_id=ads.id");
 		$this->db->join("devices","devices.id=ad_selected_devices.devices_id");		
 		if(!empty($status)){
 			$this->db->where("ads.status",$status);
+		}
+		if(!empty($franchise_id)){
+			$this->db->where("ads.franchise_id",$franchise_id);
 		}
 		if(!empty($device_id)){
 			$this->db->where("ad_selected_devices.devices_id",$device_id);

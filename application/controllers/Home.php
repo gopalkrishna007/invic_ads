@@ -21,11 +21,14 @@ class Home extends CI_Controller {
 	   $this->load->model('adplay_model');
 	}
 	public function getAllAdsData_service(){
-		$device_id = $this->input->get('device_id');
-		if(!empty($device_id)){
-			$deviceDat = $this->devices_model->getDataByDevice($device_id);
+		$deviceid = $this->input->get('device_id');
+		if(!empty($deviceid)){
+			$devDat = explode("_",$deviceid);
+			$device_id = $devDat[0];
+			$franchise_id = $devDat[1];
+			$deviceDat = $this->devices_model->getDataByDevice($device_id,$franchise_id);
 			if(!empty($deviceDat)){
-				$AdsData = $this->ads_model->getAllAdsData($status=2,$deviceDat['id']);
+				$AdsData = $this->ads_model->getAllAdsData($status=2,$deviceDat['id'],null,$franchise_id);
 				$propertiesData = $this->properties_model->getAllProperties(1);
 				if(!empty($AdsData))
 				{

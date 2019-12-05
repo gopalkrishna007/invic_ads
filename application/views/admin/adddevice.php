@@ -71,11 +71,13 @@
 										<label class="form-label">Device Id's</label>
 									</div>
 									<div class="col-md-4">
-										<select id="adType" style="width:100%" name="devices_id" required>
+										<select id="devices_id" style="width:100%" name="devices_id" required>
 											<option value="">SELECT DEVICE ID</option>
-											<?php foreach($deviceData as $ddata){ if($ddata['device_name'] == ''){ ?>
+											<?php foreach($deviceData as $ddata){ if(empty($this->uri->segment(3))){ if($ddata['device_name'] == ''){ ?>
 											<option value="<?= $ddata['id'] ?>" <?= @($device['id'] == $ddata['id'] ? 'SELECTED' : '' ) ?>><?= $ddata['device_id'] ?></option>
-											<?php } } ?>
+											<?php } }else{ ?>
+                                                <option value="<?= $ddata['id'] ?>" <?= @($device['id'] == $ddata['id'] ? 'SELECTED' : '' ) ?>><?= $ddata['device_id'] ?></option>
+                                             <?php } } ?>
 										</select>
 									</div>
 									<div class="clearfix"></div>
@@ -95,6 +97,49 @@
                                     </div>
                                     <div class="col-md-4">
 										<input type="text" class="form-control" name="device_location" required  value="<?= @$device['device_location'] ?>"/>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                     <div class="col-md-3">
+                                        <label class="form-label">Orientation</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-label">horizontal</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <input type="radio" class="form-control orientation" name="orientation" value="1" <?= @($device['orientation'] == 1?'CHECKED':'') ?> required />
+                                    </div>
+                                    <div class="col-md-1">
+                                        <label class="form-label">vertical</label>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <input type="radio" class="form-control orientation" name="orientation" value="2" <?= @($device['orientation'] == 2?'CHECKED':'') ?> required />
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Number Of Players</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <select id="numberofplayers" style="width:100%" name="numberofplayers" required>
+                                            <option value="">SELECT Number Of Players</option>
+                                            <option value="1" <?= @($device['numberofplayers'] == 1?'SELECTED':'') ?>>One</option>
+                                            <option value="2" <?= @($device['numberofplayers'] == 2?'SELECTED':'') ?>>Two</option>
+                                            <option value="3" <?= @($device['numberofplayers'] == 3?'SELECTED':'') ?>>Three</option>
+                                            <option value="4" <?= @($device['numberofplayers'] == 4?'SELECTED':'') ?>>Four</option>
+                                            <option value="5" <?= @($device['numberofplayers'] == 5?'SELECTED':'') ?>>Five</option>
+                                        </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-3">
+                                        <label class="form-label">Vartical Player Positions(Like 1,2 or 1,2,3 or 1,2,3,4)</label>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <input type="text" class="form-control" name="playerpositions"  value="<?= @$device['playerpositions'] ?>"/>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>

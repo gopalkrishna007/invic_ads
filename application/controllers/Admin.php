@@ -651,18 +651,26 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('devices_id', 'devices_id', 'trim|required');
 		$this->form_validation->set_rules('device_name', 'device_name', 'trim|required');
 		$this->form_validation->set_rules('franchise_id', 'franchise_id', 'trim|required');
+		$this->form_validation->set_rules('orientation', 'Orientation', 'trim|required');
+		$this->form_validation->set_rules('numberofplayers', 'numberofplayers', 'trim|required');
 		if ($this->form_validation->run())
 		{
 			$devices_id = $this->input->post("devices_id");
 			$device_name = $this->input->post("device_name");
 			$device_location = $this->input->post("device_location");
 			$franchise_id = $this->input->post("franchise_id");
+			$orientation = $this->input->post("orientation");
+			$numberofplayers = $this->input->post("numberofplayers");
+			$playerpositions = $this->input->post("playerpositions");
 			$status = $this->input->post("status");
 			$deviceArray = array(
 				'device_name'=>$device_name,
 				'device_location'=>$device_location,				
 				'updated_date'=>date("Y-m-d H:i:s"),
-				'franchise_id'=>$franchise_id
+				'franchise_id'=>$franchise_id,
+				'orientation'=>$orientation,
+				'numberofplayers'=>$numberofplayers,
+				'playerpositions'=>$playerpositions
 				);
 			if(!empty($this->input->post('id'))){
 				$deviceArray['status']=$status;

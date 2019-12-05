@@ -176,4 +176,23 @@ class Home extends CI_Controller {
 		}
 		echo json_encode($result);
 	}
+	public function getDiviceData(){
+	    //$_POST = json_decode(file_get_contents('php://input'), true);
+		$device_id = $this->input->get('device_id');
+		if($device_id != ''){
+			$deviceData = $this->devices_model->getDataByDevice($device_id);
+			if(!empty($deviceData)){				
+				$result['code'] = 200;
+				$result['deviceData'] = $deviceData;
+				$result['message'] = "Success";
+			}else{
+				$result['code'] = 400;
+				$result['message'] = "Fail";
+			}
+		}else{
+			$result['code'] = 400;
+			$result['message'] = "Device id can not be empty.";
+		}
+		echo json_encode($result);
+	}
 }

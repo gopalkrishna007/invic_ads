@@ -234,10 +234,12 @@ class Admin extends CI_Controller {
 	}*/
 	public function getDataByFranchiseId(){
 		$this->form_validation->set_rules('franchise_id','franchise_id','trim|required');
+		$this->form_validation->set_rules('players','players','trim|required');
 		if($this->form_validation->run())
 		{
 			$franchise_id = $this->input->post('franchise_id');
-			$devices = $this->devices_model->getAllDeviceData($status='active',$franchise_id);
+			$players = $this->input->post('players');
+			$devices = $this->devices_model->getAllDeviceData($status='active',$franchise_id,$players);
 			$services = $this->franchise_selected_services_model->getServicesByFranchiseId($franchise_id);
 			if(!empty($devices) && !empty($services)){
 				$result['success'] = 1;

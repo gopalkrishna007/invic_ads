@@ -70,6 +70,24 @@
     <div class="clearfix"></div>
 </div>
 <div class="form-group">
+     <div class="col-md-3">
+        <label class="form-label">Players</label>
+    </div>
+    <div class="col-md-1">
+        <label class="form-label">Single</label>
+    </div>
+    <div class="col-md-1">
+        <input type="radio" class="form-control playerNum" name="playerNum" value="1" required />
+    </div>
+    <div class="col-md-1">
+        <label class="form-label">Multiple</label>
+    </div>
+    <div class="col-md-1">
+        <input type="radio" class="form-control playerNum" name="playerNum" value="2" required />
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="form-group">
 	<div class="col-md-3">
 		<label class="form-label">Franchise</label>
 	</div>
@@ -341,12 +359,18 @@ $(document).on("change","#franchise_id",function(){
 	serviceObj = '';
 	deviceSection = '';
     var franchise_id = $(this).val();
-    if(franchise_id != ''){
+    var players ='';
+    if($('input[type=radio][name=playerNum]:checked').length > 0)
+    {
+        players = $('input[type=radio][name=playerNum]:checked').val();
+    }
+    if(franchise_id != '' && players.length > 0){
         $.ajax({
             type: "POST",
             url: '<?= base_url("admin/getDataByFranchiseId") ?>',
             data: {
-                "franchise_id": franchise_id
+                "franchise_id": franchise_id,
+                "players": players
             },
             dataType: "json",
             success: function(data) {
@@ -367,6 +391,10 @@ $(document).on("change","#franchise_id",function(){
             }
         });
     }else{
+        if(players.length == 0){
+            alert("Please select any one option for players.");
+            return false;
+        }
         serviceObj = '';
         deviceSection = '';
         $(".device").html("");

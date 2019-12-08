@@ -53,12 +53,21 @@ class Devices_model extends CI_Model {
 		$this->db->update(self::TABLE_NAME,$deviceArray);
 		return $this->db->affected_rows();
 	}
-	public function getAllDeviceData($status=null,$franchise_id=null){
+	public function getAllDeviceData($status=null,$franchise_id=null,$players=null){
 		if(!empty($status)){
 			$this->db->where("status",$status);
 		}
 		if(!empty($franchise_id)){
 			$this->db->where("franchise_id",$franchise_id);
+		}
+		if(!empty($players)){
+			if($players == 1){
+				$this->db->where("numberofplayers",$players);
+			}else
+			{
+				$players = 2;
+				$this->db->where("numberofplayers >=",$players);
+			}
 		}
 		$this->db->where("device_name != ''");
 		$this->db->order_by("id", "DESC");

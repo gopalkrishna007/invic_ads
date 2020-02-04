@@ -51,7 +51,7 @@ class Ads_model extends CI_Model {
 		$this->db->where('id',$id);
 		return $this->db->delete(self::TABLE_NAME);
 	}
-	public function getAllAds($status=null,$user_id=null){
+	public function getAllAds($status=null,$user_id=null,$deviceType=null){
 		$this->db->select('ads.*,devices.device_id,group_concat(DISTINCT concat(devices.device_name) SEPARATOR ",") as device_name,group_concat(DISTINCT concat(devices.device_location) SEPARATOR ",") as locations,users.username');
 		$this->db->from(self::TABLE_NAME);
 		$this->db->join("ad_selected_devices","ad_selected_devices.ad_id=ads.id");
@@ -63,6 +63,12 @@ class Ads_model extends CI_Model {
 		if(!empty($user_id)){
 			$this->db->where("ads.user_id",$user_id);
 		}
+		if(!empty($deviceType) && $deviceType == 1){
+			$this->db->where("devices.numberofplayers <= ",$deviceType);
+		}else if(!empty($deviceType) && $deviceType == 2){
+			$this->db->where("devices.numberofplayers >= ",$deviceType);
+		}
+		
 		$this->db->group_by("ads.id");
 		$this->db->order_by("ads.id","DESC");
 		$query = $this->db->get();

@@ -403,7 +403,13 @@ class Admin extends CI_Controller {
 	}
 	public function viewads(){
 		$views = array('viewads');
-		$adsdata = $this->ads_model->getAllAds();
+		$adsdata = $this->ads_model->getAllAds(null,null,$deviceType=1);
+		$data = array('views'=>$views,'adsdata'=>$adsdata);
+		$this->load->view('admin/template/template',$data);
+	}
+	public function viewmultipleadsdevices(){
+		$views = array('viewads');
+		$adsdata = $this->ads_model->getAllAds(null,null,$deviceType=2);
 		$data = array('views'=>$views,'adsdata'=>$adsdata);
 		$this->load->view('admin/template/template',$data);
 	}

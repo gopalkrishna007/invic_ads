@@ -116,7 +116,8 @@
                     <li> <a href="javascript:;"> <i class="material-icons">Ads</i> <span class="title">Ads Info</span> <span class=" arrow"></span> </a>
                         <ul class="sub-menu">
                             <li> <a href="<?= base_url("admin/addads") ?>">Add Ads</a> </li>
-                             <li> <a href="<?= base_url("admin/viewads") ?>">View Ads</a> </li>
+                            <li> <a href="<?= base_url("admin/viewads") ?>">View Ads</a> </li>
+                            <li> <a href="<?= base_url("admin/viewmultipleadsdevices") ?>">View Multiple Ads</a> </li>
                         </ul>
                     </li>
 					<li> <a href="javascript:;"> <i class="material-icons">Devices</i> <span class="title">Devices Info</span> <span class=" arrow"></span> </a>

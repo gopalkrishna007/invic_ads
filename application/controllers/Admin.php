@@ -377,7 +377,7 @@ class Admin extends CI_Controller {
 						$this->ad_selected_devices_model->saveSelectedDevices($finalAdsArray);
 					}
 				}
-				$this->prepare_flashmessage("user ".($id==''?'adding':'updationg')." successfully..", 0);
+				$this->prepare_flashmessage("Ads ".($id==''?'adding':'updationg')." successfully..", 0);
 				redirect('admin/viewads');
 			}else{
 				$this->prepare_flashmessage("Ads ".($id==''?'adding':'updationg')." in error..", 1);
@@ -1261,15 +1261,17 @@ class Admin extends CI_Controller {
 					$arrayObj['device_id'] = $device_id;
 					$arrayObj['position'] = $value;
 					$arrayObj['ratio'] = $playerratio[$key];
-					if($_FILES['playerimage'][$key]["name"] != '')
+					//print_r($_FILES['playerimage'.$value]);exit;
+					if($_FILES['playerimage'.$value]["name"] != '')
 					{	
 						$folders = array("Ads_images");				
-						$images = $_FILES['playerimage'][$key];	
+						$images = $_FILES['playerimage'.$value];	
 						$filename = $this->uploaddata->uploadImages($images,$folders);
 						$arrayObj['file'] = $filename;
 					}
 					array_push($finalArray,$arrayObj);
 				}
+				//print_r($finalArray);exit;
 				if(!empty($finalArray)){
 					$res = $this->multipleplayerads_model->saveData($finalArray);
 					if($res > 0)

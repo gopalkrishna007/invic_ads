@@ -182,7 +182,7 @@
 													'<label class="form-label">Position '+(i+1)+'</label>'+
 												'</div>'+
 												'<div class="col-md-5">'+
-													'<input type="file"  name="playerimage['+(i+1)+']" required  />'+
+													'<input type="file"  name="playerimage'+(i+1)+'" required  />'+
 												'</div>'+
 												'<div class="col-md-4">'+
 													'<input type="text" class="form-control" name="playerratio['+(i+1)+']" required  />'+

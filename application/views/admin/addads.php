@@ -77,7 +77,7 @@
         <label class="form-label">Single</label>
     </div>
     <div class="col-md-1">
-        <input type="radio" class="form-control playerNum" name="playerNum" value="1" required />
+        <input type="radio" class="form-control playerNum" name="playerNum" value="1" checked required />
     </div>
     <div class="col-md-1">
         <label class="form-label">Multiple</label>
@@ -106,7 +106,7 @@
         <label class="form-label">Device Name</label>
     </div>
     <div class="col-md-4">        
-		<select class="form-control testSelAll1 device" name="devices_id[]" placeholder="SELECT DEVICE NAME" multiple="multiple" required>	
+		<select class="form-control testSelAll1 device" name="devices_id[]" placeholder="SELECT DEVICE NAME" multiple required>	
 		</select>
     </div>
     <div class="clearfix"></div>    
@@ -350,16 +350,28 @@
 </div>
 <script>
 $('.testSelAll1').SumoSelect({selectAll:true });
+$(".playerNum").click(function(){
+    $("#franchise_id").val("");
+    if($('input[type=radio][name=playerNum]:checked').length > 0)
+    {
+        if($('input[type=radio][name=playerNum]:checked').val() == 2){
+            $(".device").removeAttr("multiple");
+        }else{
+            $(".device").attr("multiple","multiple");
+        }
+        //$('.testSelAll1').SumoSelect({selectAll:true });
+    }
+});
 var deviceSection = '';
 var deviceObj = [];
 var serviceDiv = '';
 var serviceObj = '';
+var players ='';
 $(document).on("change","#franchise_id",function(){
 	$(".device").html("");
 	serviceObj = '';
 	deviceSection = '';
-    var franchise_id = $(this).val();
-    var players ='';
+    var franchise_id = $(this).val();    
     if($('input[type=radio][name=playerNum]:checked').length > 0)
     {
         players = $('input[type=radio][name=playerNum]:checked').val();
@@ -387,7 +399,13 @@ $(document).on("change","#franchise_id",function(){
 					deviceSection = '';
 					$(".device").html("");
                 }
-				$('.testSelAll1')[0].sumo.reload();
+                if(players == 2){
+    				//$('.testSelAll1')[0].sumo.reload();
+                    $('.testSelAll1')[0].sumo.unload();
+                    $('.testSelAll1').SumoSelect();
+                }else{
+                    $('.testSelAll1')[0].sumo.reload();
+                }
             }
         });
     }else{
@@ -403,6 +421,7 @@ $(document).on("change","#franchise_id",function(){
     }
 });
 $(document).on("change",".device",function(){
+
 	deviceObj = [];
 	serviceDiv = '';
 	$("#serviceDiv").html('');

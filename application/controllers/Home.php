@@ -19,6 +19,7 @@ class Home extends CI_Controller {
 	   $this->load->model('properties_model');
 	   $this->load->model('devices_model');
 	   $this->load->model('adplay_model');
+	   $this->load->model("multipleplayerads_model");
 	}
 	public function getAllAdsData_service(){
 		$deviceid = $this->input->get('device_id');
@@ -48,6 +49,12 @@ class Home extends CI_Controller {
 							/*$dat['adFile'] = array("image"=>base_url()."uploads/Ads_videos/".$dat['adFile']);*/
 							$dat['adFile'] = base_url()."uploads/Ads_videos/".$dat['adFile'];
 						}
+						//array_push($adsDataArray,$dat);
+						if($dat['playerNum'] == 2){
+							$dat['playerData'] = $this->multipleplayerads_model->getDataByAdId($dat['id'],$deviceDat['id']);							
+						}else{
+							$dat['playerData'] = array();
+						}
 						array_push($adsDataArray,$dat);
 					}
 					/*$deviceArray = array(
@@ -56,6 +63,8 @@ class Home extends CI_Controller {
 					$deviceResponce = $this->devices_model->updateDevicedataByDeviceID($deviceArray,$device_id);*/
 					$result['results']=$adsDataArray;
 					$result['message'] = 'Ads Links';
+					$result['imageUri'] = base_url()."uploads/Ads_images/";
+					$result['videoUri'] =  base_url()."uploads/Ads_videos/";
 					$result['serverrefreshtime'] = (!empty($propertiesData)?$propertiesData['serverrefreshtime']:'0');
 					$result['code'] = 200;
 				}else{

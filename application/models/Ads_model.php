@@ -74,4 +74,16 @@ class Ads_model extends CI_Model {
 		$query = $this->db->get();
 		return $query->result_array();
 	}
+	public function getaddanddevicedatabyid($id){
+		$this->db->select('ads.*,devices.*,devices.id as deviceId');
+		$this->db->from(self::TABLE_NAME);
+		$this->db->join("ad_selected_devices","ad_selected_devices.ad_id=ads.id");
+		$this->db->join("devices","devices.id=ad_selected_devices.devices_id");
+		if(!empty($id)){
+			$this->db->where("ads.id",$id);
+		}
+		$this->db->group_by("ads.id");
+		$query = $this->db->get();
+		return $query->row_array();
+	}
 }

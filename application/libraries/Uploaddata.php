@@ -10,7 +10,7 @@ class Uploaddata{
 		$this->CI->load->library('image_lib');
 	}
 
-	public function uploadImages($files,$folders)
+	public function uploadImages($files,$folders,$type=null)
 	{
 		$filename = "";
 		$folder_structure = "/";
@@ -32,8 +32,12 @@ class Uploaddata{
             	$_FILES['image']['error']= $files['error'];
             	$_FILES['image']['size']= $files['size'];
 
-				$config['upload_path'] = $folderpath;	
-			    $config['allowed_types'] = 'gif|jpg|png|jpeg|xlsx|pdf|doc|docx|xls|xlsx|avi|flv|wmv|mp4|mp3';
+				$config['upload_path'] = $folderpath;
+				if(empty($type)){
+					$config['allowed_types'] = 'gif|jpg|png|jpeg|xlsx|pdf|doc|docx|xls|xlsx|avi|flv|wmv|mp4|mp3';
+				}else if($type == 1){
+					$config['allowed_types'] = 'avi|flv|wmv|mp4|mp3';
+				}
 	        	/*$config['max_size']	= '5120'; */
 	        	$config['encrypt_name']	= TRUE;
 

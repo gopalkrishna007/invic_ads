@@ -31,6 +31,7 @@ class Admin extends CI_Controller {
 			$this->load->model("module_role_model");
 			$this->load->model("role_selected_module_model"); 
 			$this->load->model("role_selected_module_pages_model");
+			$this->load->model("multipleplayerads_model");
 	}
 	public function prepare_flashmessage($msg, $type) {
         $returnmsg = '';
@@ -266,6 +267,7 @@ class Admin extends CI_Controller {
 		$this->form_validation->set_rules('adType','adType','trim|required');
 		//$this->form_validation->set_rules('adDuration','adDuration','trim|required');
 		//$this->form_validation->set_rules('add_locations','add_locations','trim|required');
+		$this->form_validation->set_rules('playerNum','Players count','trim|required');
 		$this->form_validation->set_rules('devices_id[]','devices_id','trim|required');
 		if(!empty($this->input->post('isUserCreate'))){
 			$this->form_validation->set_rules('fname','fname','trim|required');
@@ -280,6 +282,7 @@ class Admin extends CI_Controller {
 			$id = $this->input->post('id');
 			$adTitle = $this->input->post("adTitle");
 			$adType = $this->input->post("adType");
+			$playerNum = $this->input->post("playerNum");
 			$adDuration = $this->input->post("adDuration");
 			$add_locations = $this->input->post("add_locations");
 			$devices_id = $this->input->post("devices_id[]");
@@ -337,7 +340,7 @@ class Admin extends CI_Controller {
 				$isEnableStartEndDate = 'no';
 			}
 			$imageDisplayDuration = $this->input->post("imageDisplayDuration");
-			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate,'franchise_id'=>$franchise_id);
+			$adarray = array('adTitle'=>$adTitle,'adType'=>$adType,'adDuration'=>$adDuration,'add_locations'=>$add_locations,'isLiveEnabled'=>$isLiveEnabled,'imageDisplayDurationsplit'=>$imageDisplayDurationsplit,'imageDisplayDuration'=>$imageDisplayDuration,'created_date'=>date("Y-m-d H:i:s"),'status'=>2,'adCategory'=>$adCategory,'start_date'=>$start_date,'end_date'=>$end_date,'user_id'=>$user_id,'isEnableStartEndDate'=>$isEnableStartEndDate,'franchise_id'=>$franchise_id,'playerNum'=>$playerNum);
 						
 			if($_FILES['image-file']["name"] != '')
 			{	
@@ -408,7 +411,7 @@ class Admin extends CI_Controller {
 		$this->load->view('admin/template/template',$data);
 	}
 	public function viewmultipleadsdevices(){
-		$views = array('viewads');
+		$views = array('multiplePlayerAds');
 		$adsdata = $this->ads_model->getAllAds(null,null,$deviceType=2);
 		$data = array('views'=>$views,'adsdata'=>$adsdata);
 		$this->load->view('admin/template/template',$data);
@@ -1220,4 +1223,73 @@ class Admin extends CI_Controller {
 			}
         }
     }
+	public function getAdsDataByID(){
+		$this->form_validation->set_rules('id','id','trim|required');
+		if($this->form_validation->run())
+		{
+			$id = $this->input->post("id");
+			$res = $this->ads_model->getaddanddevicedatabyid($id);
+			if($res > 0){
+				$result['success'] = 1;
+				$result['message'] = "success";
+				$result['adsData'] = $res;
+			}else{
+				$result['success'] = 2;
+				$result['message'] = "Error"; 
+			}
+		}else{
+			$result['success'] = 2;
+		    $result['message'] = validation_errors(); 
+		}
+		 echo json_encode($result);
+	}
+	public function savePlayerimages(){
+		$this->form_validation->set_rules('ad_id','ad_id','trim|required');
+		$this->form_validation->set_rules('device_id','ad_id','trim|required');
+		if($this->form_validation->run())
+		{
+			$finalArray = array();
+			$ad_id = $this->input->post("ad_id");
+			$device_id = $this->input->post("device_id");
+			$playerimage = $this->input->post("playerimage[]");
+			$playerratio = $this->input->post("playerratio[]");
+			$position = $this->input->post("position[]");
+			if(!empty($position)){
+				foreach($position as $key=>$value){
+					$arrayObj = array();
+					$arrayObj['ad_id'] = $ad_id;
+					$arrayObj['device_id'] = $device_id;
+					$arrayObj['position'] = $value;
+					$arrayObj['ratio'] = $playerratio[$key];
+					if($_FILES['playerimage'][$key]["name"] != '')
+					{	
+						$folders = array("Ads_images");				
+						$images = $_FILES['playerimage'][$key];	
+						$filename = $this->uploaddata->uploadImages($images,$folders);
+						$arrayObj['file'] = $filename;
+					}
+					array_push($finalArray,$arrayObj);
+				}
+				if(!empty($finalArray)){
+					$res = $this->multipleplayerads_model->saveData($finalArray);
+					if($res > 0)
+					{
+						$this->prepare_flashmessage("Data added successfully..", 0);
+					}else{
+						$this->prepare_flashmessage("Data adding in error..", 1);
+					}
+				}else{
+					$this->prepare_flashmessage("Final array is empty..", 1);
+				}
+				redirect('admin/viewmultipleadsdevices');
+			}else{
+				$this->prepare_flashmessage("All fields are required..", 1);
+				redirect('admin/viewmultipleadsdevices');
+			}
+			
+		}else{
+			$this->prepare_flashmessage("All fields are required..", 1);
+			redirect('admin/viewmultipleadsdevices');
+		}
+	}
 }

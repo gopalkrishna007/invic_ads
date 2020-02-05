@@ -93,7 +93,7 @@
                            <td><?= $dat['locations'] ?></td>
                            <td><?= $dat['isLiveEnabled'] ?></td>
                            <td><?= $dat['adCategory'] ?></td>
-                           <td><?php if($dat['adFile'] != ''){ (if($dat['adType'] == 'image'){ ?>
+                           <td><?php if($dat['adFile'] != ''){ if($dat['adType'] == 'image'){ ?>
                             <img src="<?= base_url('uploads/Ads_images/'.$dat['adFile']) ?>" style="width: 15%;" />
                             <?php }else{
                               echo $dat['adFile'];
@@ -107,7 +107,7 @@
                               <div class="btn-group">
                                  <a href="javascript:void(0)" data-toggle="dropdown" class="btn dropdown-toggle btn-demo-space" aria-expanded="true"><i class="fa fa-bars" aria-hidden="true"></i> </a>						
                                  <ul class="dropdown-menu">
-                                    <!--<li class="active" data-filter="all" data-dimension="recreation"><a href="user-details.php">View</a></li>-->						
+                                    <li class="active uploadDeviceInfo" data-filter="all" data-dimension="recreation" data="<?= $dat['id'] ?>"><a href="javascript:void(0)">Upload</a></li>
                                     <li data-filter="camping" data-dimension="recreation"><a href="<?= base_url("admin/editads/".$dat['id']) ?>">Edit</a></li>
                                     <li data-filter="climbing" data-dimension="recreation" style="cursor: pointer;"><a class="sweet-5" data="<?= $dat['id'] ?>" onclick="_gaq.push(['_trackEvent', 'example', 'try', 'sweet-5']);">Delete</a></li>
                                     <!--<li data-filter="fishing" data-dimension="recreation" style="cursor: pointer;"><a class="sweet-2" data="<?= $dat['id'] ?>" data-status="<?= ($dat['status'] == 2)?'3':'2' ?>" onclick="_gaq.push(['_trackEvent', 'example', 'try', 'sweet-2']);"><?= ($dat['status'] == 2)?'Deactivate':'Activate' ?></a></li>-->
@@ -123,8 +123,86 @@
          </div>
       </div>
    </div>
+  
 </div>
-</div><script>
+
+</div>
+ <!-- Modal -->
+	<div id="myRate" class="modal fade" role="dialog">
+		<div class="modal-dialog  modal-lg">
+
+		<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header hed-clr">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title"></h4>
+				</div>
+			<div class="modal-body">
+				<form action="<?= base_url("admin/savePlayerimages") ?>" class="login-form validate" id="login-form" method="post" name="login-form" enctype="multipart/form-data">
+					<div id="playerContent">
+					</div>
+					<div class="form-actions">
+						<div class="col-md-3">
+						</div>
+						<div class="col-md-4">
+							<input type="hidden" name="ad_id" id="ad_id" value="" />
+							<input type="hidden" name="device_id" id="device_id" value="" />
+							<button class="btn btn-success btn-cons" type="submit"><i class="icon-ok"></i> Submit</button>
+						</div>
+					</div>					
+				</form>
+			</div>
+			</div>
+
+		</div>
+	</div>
+<script>
+	var deviceSection = '';
+	$(document).on("click",".uploadDeviceInfo",function(){
+		deviceSection = '';
+		$("#playerContent").html("");
+		var ads_id = $(this).attr("data");
+		if (ads_id) {
+			$.ajax({
+				type: "POST",
+				url: '<?= base_url("admin/getAdsDataByID") ?>',
+				data: {
+					"id": ads_id
+				},
+				dataType: "json",
+				success: function(data) {
+					console.log(data.adsData);
+					if (data.success == 1) {
+						$("#ad_id").val(ads_id);
+						$("#device_id").val(data.adsData.deviceId);
+						$(".modal-title").text(data.adsData.adTitle +' / '+ data.adsData.device_name);
+						for(var i=0;i<data.adsData.numberofplayers;i++){
+							deviceSection += '<div class="form-group">'+
+												'<div class="col-md-3">'+
+													'<label class="form-label">Position '+(i+1)+'</label>'+
+												'</div>'+
+												'<div class="col-md-5">'+
+													'<input type="file"  name="playerimage['+(i+1)+']" required  />'+
+												'</div>'+
+												'<div class="col-md-4">'+
+													'<input type="text" class="form-control" name="playerratio['+(i+1)+']" required  />'+
+												'</div>'+
+												'<div class="clearfix"></div>'+
+												'<input type="hidden" name="position['+(i+1)+']" value="'+(i+1)+'"/>'+
+											'</div>';
+						}
+						$("#playerContent").html(deviceSection);
+						$("#myRate").modal("show");
+					} else {
+						alert(data.message);
+					}
+				}
+			});
+		} else {
+			alert("Ads Id Required.");
+		}
+		
+	});
     Array.prototype.forEach.call(document.querySelectorAll('.sweet-5'), function(button) {
         button.onclick = function() {
             var id = $(this).attr("data");

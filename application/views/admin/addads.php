@@ -456,10 +456,16 @@ $(document).on("change",".device",function(){
 });
 $(document).on("click",".adType",function(){
     var adType = $(this).val();
-    if(adType == 'image'){
+    var players = '';
+    if($('input[type=radio][name=playerNum]:checked').length > 0)
+    {
+        players = $('input[type=radio][name=playerNum]:checked').val();
+    }
+      
+    if(adType == 'image' && players == 1){
         $(".imagediv").show();
         $(".videodiv").hide();
-    }else if(adType == 'video'){
+    }else if(adType == 'video' && players == 1){
         $(".imagediv").hide();
         $(".videodiv").show();
     }else{

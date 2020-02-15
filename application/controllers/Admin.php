@@ -1249,11 +1249,13 @@ class Admin extends CI_Controller {
 		if($this->form_validation->run())
 		{
 			$finalArray = array();
+			$finalArray1 = array();
 			$ad_id = $this->input->post("ad_id");
 			$device_id = $this->input->post("device_id");
 			$playerimage = $this->input->post("playerimage[]");
 			$playerratio = $this->input->post("playerratio[]");
 			$position = $this->input->post("position[]");
+			$date = date("Y-m-d H:i:s");
 			if(!empty($position)){
 				foreach($position as $key=>$value){
 					$arrayObj = array();
@@ -1269,7 +1271,16 @@ class Admin extends CI_Controller {
 						$filename = $this->uploaddata->uploadImages($images,$folders);
 						$arrayObj['file'] = $filename;
 					}
-					array_push($finalArray,$arrayObj);
+					$playerData = $this->multipleplayerads_model->getDataByPosition($value,$ad_id);
+					if(empty($playerData)){
+						$arrayObj['created_date'] = $date;
+						array_push($finalArray,$arrayObj);
+					}else{
+						$arrayObj['updated_date'] = $date;
+						@unlink("uploads/Ads_images/".$playerData['file']);
+						$this->multipleplayerads_model->updatePlayerAds($arrayObj,$value,$ad_id);
+						array_push($finalArray1,$arrayObj);
+					}
 				}
 				//print_r($finalArray);exit;
 				if(!empty($finalArray)){
@@ -1280,6 +1291,8 @@ class Admin extends CI_Controller {
 					}else{
 						$this->prepare_flashmessage("Data adding in error..", 1);
 					}
+				}else if(!empty($finalArray1)){
+					$this->prepare_flashmessage("Data added successfully..", 0);
 				}else{
 					$this->prepare_flashmessage("Final array is empty..", 1);
 				}

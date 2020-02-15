@@ -204,4 +204,27 @@ class Home extends CI_Controller {
 		}
 		echo json_encode($result);
 	}
+	public function getPlayerImagesByPosition(){
+		$this->form_validation->set_rules('ad_id','ad_id','trim|required');
+		$this->form_validation->set_rules('position','position','trim|required');
+		if($this->form_validation->run())
+		{
+			$ad_id = $this->input->post('ad_id');
+			$position = $this->input->post('position');
+			$playerData = $this->multipleplayerads_model->getDataByPosition($position,$ad_id);
+			if(!empty($playerData)){
+				$playerData['file'] = base_url("uploads/Ads_images/".$playerData['file']);
+				$result['results']=$playerData;
+				$result['message'] = 'success';
+				$result['code'] = 200;
+			}else{
+				$result['code'] = 400;
+				$result['message'] = "Device Id not found.";
+			}
+		}else{
+			$result['code'] = 401;
+			$result['message'] = validation_errors();
+		}
+		echo json_encode($result);
+	}
 }

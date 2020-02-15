@@ -57,7 +57,7 @@
          <h3>User <span class="semi-bold">Registration</span></h3>
 		  <div style="float: right;"><button class="btn btn-success btn-cons downloaduserdata" type="button"><i class="icon-ok"></i> Download</button></div>
       </div>
-      <div class="row">
+      <div class="row" style="width: max-content;" >
          <div class="col-md-12">
             <div><?php echo $this->session->flashdata('message'); ?> </div>
             <div class="grid simple ">
@@ -71,10 +71,10 @@
                            <th>Type</th>
                            <th>Duration</th>
                            <th>Locations</th>
-						   <th>LiveEnabled</th>
+						   <th>Live Enabled</th>
                            <th>Category</th>
                            <th>Image/Video</th>
-                           <th>CreatedDate</th>
+                           <th>Created Date</th>
                            <th>Start Date</th>
                            <th>End Date</th>
                            <th>Status</th>

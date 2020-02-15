@@ -57,7 +57,7 @@
          <h3>User <span class="semi-bold">Registration</span></h3>
 		  <div style="float: right;"><button class="btn btn-success btn-cons downloaduserdata" type="button"><i class="icon-ok"></i> Download</button></div>
       </div>
-      <div class="row">
+      <div class="row" style="width: max-content;">
          <div class="col-md-12">
             <div><?php echo $this->session->flashdata('message'); ?> </div>
             <div class="grid simple ">
@@ -71,10 +71,10 @@
                            <th>Type</th>
                            <th>Duration</th>
                            <th>Locations</th>
-						   <th>LiveEnabled</th>
+						   <th>Live Enabled</th>
                            <th>Category</th>
                            <th>Image/Video</th>
-                           <th>CreatedDate</th>
+                           <th>Created Date</th>
                            <th>Start Date</th>
                            <th>End Date</th>
                            <th>Status</th>
@@ -172,23 +172,34 @@
 				dataType: "json",
 				success: function(data) {
 					console.log(data.adsData);
-					if (data.success == 1) {
+                    if (data.success == 1) {
+                        var accept = '';
+                        var accepttype = '';
+                        if(data.adsData.adType == 'image'){
+                            accept ="image/jpg,image/png,image/jpeg,image/gif";
+                            accepttype ="jpg, png, jpeg, gif";
+                        }else if(data.adsData.adType == 'video'){
+                            accept="video/mp4";
+                            accepttype ="mp4";
+                        }
 						$("#ad_id").val(ads_id);
 						$("#device_id").val(data.adsData.deviceId);
 						$(".modal-title").text(data.adsData.adTitle +' / '+ data.adsData.device_name);
-						for(var i=0;i<data.adsData.numberofplayers;i++){
+                        var playerpositions = (data.adsData.playerpositions).split(",");
+						for(var i=0;i<playerpositions.length;i++){
 							deviceSection += '<div class="form-group">'+
 												'<div class="col-md-3">'+
-													'<label class="form-label">Position '+(i+1)+'</label>'+
+													'<label class="form-label">Position '+(playerpositions[i])+'</label>'+
 												'</div>'+
 												'<div class="col-md-5">'+
-													'<input type="file"  name="playerimage'+(i+1)+'" required  />'+
+                                                    '<input type="file"  name="playerimage'+(playerpositions[i])+'" required accept="'+accept+'" />'+
+                                                    '<span>Please upload ('+accepttype+') '+data.adsData.adType+' formats only. </span>'+
 												'</div>'+
 												'<div class="col-md-4">'+
-													'<input type="text" class="form-control" name="playerratio['+(i+1)+']" required  />'+
+													'<input type="text" class="form-control" name="playerratio['+(playerpositions[i])+']" required  />'+
 												'</div>'+
 												'<div class="clearfix"></div>'+
-												'<input type="hidden" name="position['+(i+1)+']" value="'+(i+1)+'"/>'+
+												'<input type="hidden" name="position['+(playerpositions[i])+']" value="'+(playerpositions[i])+'"/>'+
 											'</div>';
 						}
 						$("#playerContent").html(deviceSection);

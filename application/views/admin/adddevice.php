@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-3">
-                                        <label class="form-label">Vartical Player Positions(Like 1,2 or 1,2,3 or 1,2,3,4)</label>
+                                        <label class="form-label">Vartical Player Positions(Like 0,1 or 0,1,2 or 0,1,2,3 or 0,1,2,3,4)</label>
                                     </div>
                                     <div class="col-md-4">
                                         <input type="text" class="form-control" name="playerpositions"  value="<?= @$device['playerpositions'] ?>"/>

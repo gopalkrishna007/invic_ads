@@ -25,6 +25,17 @@ class Multipleplayerads_model extends CI_Model {
 		return $query->row_array();
 
 	}
+	public function getDataByPositionAndDeviceID($position,$device_id,$type){
+		$this->db->select("multipleplayerads.*,ads.adType");
+		$this->db->from(self::TABLE_NAME);
+		$this->db->join("ads","ads.id = multipleplayerads.ad_id");
+		$this->db->where('multipleplayerads.device_id',$device_id);
+		$this->db->where('multipleplayerads.position',$position);
+		$this->db->where('ads.adType',$type);
+		$query = $this->db->get();
+		return $query->result_array();
+
+	}
 	public function updatePlayerAds($arrayObj,$position,$ad_id){
 		$this->db->where('ad_id',$ad_id);
 		$this->db->where('position',$position);

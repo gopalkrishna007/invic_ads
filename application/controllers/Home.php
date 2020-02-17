@@ -205,15 +205,17 @@ class Home extends CI_Controller {
 		echo json_encode($result);
 	}
 	public function getPlayerImagesByPosition(){
-		$this->form_validation->set_rules('ad_id','ad_id','trim|required');
+		$this->form_validation->set_rules('device_id','device_id','trim|required');
 		$this->form_validation->set_rules('position','position','trim|required');
+		$this->form_validation->set_rules('type','type','trim|required');
 		if($this->form_validation->run())
 		{
-			$ad_id = $this->input->post('ad_id');
+			$device_id = $this->input->post('device_id');
 			$position = $this->input->post('position');
-			$playerData = $this->multipleplayerads_model->getDataByPosition($position,$ad_id);
+			$type = $this->input->post('type');
+			$playerData = $this->multipleplayerads_model->getDataByPositionAndDeviceID($position,$device_id,$type);
 			if(!empty($playerData)){
-				$playerData['file'] = base_url("uploads/Ads_images/".$playerData['file']);
+				$playerData['fileurl'] = base_url("uploads/Ads_images/");
 				$result['results']=$playerData;
 				$result['message'] = 'success';
 				$result['code'] = 200;
@@ -225,6 +227,6 @@ class Home extends CI_Controller {
 			$result['code'] = 401;
 			$result['message'] = validation_errors();
 		}
-		echo json_encode($result);
+		echo $result;
 	}
 }

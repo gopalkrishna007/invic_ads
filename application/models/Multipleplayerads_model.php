@@ -32,6 +32,7 @@ class Multipleplayerads_model extends CI_Model {
 		$this->db->where('multipleplayerads.device_id',$device_id);
 		$this->db->where('multipleplayerads.position',$position);
 		$this->db->where('ads.adType',$type);
+		$this->db->order_by("multipleplayerads.id","DESC");
 		$query = $this->db->get();
 		return $query->result_array();
 

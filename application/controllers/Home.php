@@ -215,7 +215,7 @@ class Home extends CI_Controller {
 			$type = $this->input->post('type');
 			$playerData = $this->multipleplayerads_model->getDataByPositionAndDeviceID($position,$device_id,$type);
 			if(!empty($playerData)){
-				$playerData['fileurl'] = base_url("uploads/Ads_images/");
+				$result['fileurl'] = base_url("uploads/Ads_images/");
 				$result['results']=$playerData;
 				$result['message'] = 'success';
 				$result['code'] = 200;
@@ -227,6 +227,6 @@ class Home extends CI_Controller {
 			$result['code'] = 401;
 			$result['message'] = validation_errors();
 		}
-		echo $result;
+		echo json_encode($result);
 	}
 }
